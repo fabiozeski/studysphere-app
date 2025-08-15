@@ -11,6 +11,7 @@ import {
   Shield
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 import {
   Sidebar,
@@ -24,10 +25,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-
-// Mock user role - in real app this would come from auth context
-type UserRole = "student" | "admin";
-const userRole: UserRole = "student";
 
 const studentItems = [
   { title: "Dashboard", url: "/", icon: Home },
@@ -48,6 +45,7 @@ const adminItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
+  const { userRole } = useAuth();
   const currentPath = location.pathname;
   const isCollapsed = state === "collapsed";
 

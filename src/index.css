@@ -2,62 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Educational Platform Design System */
+/* Minimal Dark Educational Platform - Discord Style */
 
 @layer base {
   :root {
-    /* Core Educational Colors */
-    --background: 240 8% 98%;
-    --foreground: 224 18% 18%;
+    /* Dark Discord-inspired Colors */
+    --background: 220 13% 18%;
+    --foreground: 210 20% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 18% 18%;
+    --card: 220 13% 15%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 18% 18%;
+    --popover: 220 13% 15%;
+    --popover-foreground: 210 20% 98%;
 
-    /* Educational Blue Theme */
+    /* Clean Primary Blue */
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 217 91% 55%;
-    --primary-light: 217 91% 95%;
+    --primary-light: 217 91% 20%;
 
     /* Success Green for Progress */
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
-    --success-light: 142 76% 95%;
+    --success-light: 142 76% 20%;
 
     /* Warning Orange for Attention */
     --warning: 43 96% 56%;
-    --warning-foreground: 224 18% 18%;
-    --warning-light: 43 96% 95%;
+    --warning-foreground: 220 13% 18%;
+    --warning-light: 43 96% 20%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 224 18% 18%;
+    --secondary: 220 13% 21%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 220 13% 21%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 217 91% 95%;
+    --accent: 220 13% 21%;
     --accent-foreground: 217 91% 60%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 94%;
+    --border: 220 13% 28%;
+    --input: 220 13% 21%;
     --ring: 217 91% 60%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Sidebar Educational Theme */
-    --sidebar-background: 224 18% 18%;
-    --sidebar-foreground: 0 0% 95%;
+    /* Minimal Sidebar Theme */
+    --sidebar-background: 220 13% 12%;
+    --sidebar-foreground: 210 20% 98%;
     --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 224 18% 25%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 224 18% 25%;
+    --sidebar-accent: 220 13% 18%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 220 13% 18%;
     --sidebar-ring: 217 91% 60%;
 
     /* Video Player Theme */
@@ -85,55 +85,9 @@
   }
 
   .dark {
-    --background: 224 18% 8%;
-    --foreground: 0 0% 95%;
-
-    --card: 224 18% 12%;
-    --card-foreground: 0 0% 95%;
-
-    --popover: 224 18% 12%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 91% 65%;
-    --primary-light: 217 91% 15%;
-
-    --success: 142 76% 40%;
-    --success-foreground: 0 0% 100%;
-    --success-light: 142 76% 15%;
-
-    --warning: 43 96% 56%;
-    --warning-foreground: 224 18% 8%;
-    --warning-light: 43 96% 15%;
-
-    --secondary: 224 18% 15%;
-    --secondary-foreground: 0 0% 95%;
-
-    --muted: 224 18% 15%;
-    --muted-foreground: 240 5% 65%;
-
-    --accent: 224 18% 15%;
-    --accent-foreground: 217 91% 60%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 224 18% 18%;
-    --input: 224 18% 18%;
-    --ring: 217 91% 60%;
-
-    --sidebar-background: 224 18% 6%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 224 18% 12%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 224 18% 12%;
-    --sidebar-ring: 217 91% 60%;
-
-    --progress-background: 224 18% 18%;
-    --progress-foreground: 142 76% 40%;
+    /* Dark mode uses same values as root - always dark theme */
+    --background: 220 13% 18%;
+    --foreground: 210 20% 98%;
   }
 }
 

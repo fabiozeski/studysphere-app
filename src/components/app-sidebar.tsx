@@ -55,46 +55,35 @@ export function AppSidebar() {
   const isActive = (path: string) => currentPath === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-sidebar-accent text-sidebar-primary font-medium" 
-      : "hover:bg-sidebar-accent/50 text-sidebar-foreground";
+      ? "bg-sidebar-accent text-sidebar-primary font-medium rounded-md" 
+      : "hover:bg-sidebar-accent/70 text-sidebar-foreground/80 hover:text-sidebar-foreground rounded-md transition-smooth";
 
   return (
     <Sidebar
-      className={isCollapsed ? "w-16" : "w-64"}
-      collapsible="icon"
+      className="w-16"
+      collapsible="none"
     >
-      <SidebarContent>
-        {/* Logo/Brand */}
-        <div className="p-4 border-b border-sidebar-border">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            {!isCollapsed && (
-              <div>
-                <h2 className="text-lg font-bold text-sidebar-foreground">EduPlatform</h2>
-                <p className="text-xs text-sidebar-foreground/70 capitalize flex items-center gap-1">
-                  {userRole === "admin" && <Shield className="w-3 h-3" />}
-                  {userRole === "admin" ? "Administrador" : "Estudante"}
-                </p>
-              </div>
-            )}
+      <SidebarContent className="p-2">
+        {/* Minimal Logo */}
+        <div className="p-3 mb-4 flex justify-center">
+          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+            <GraduationCap className="w-5 h-5 text-white" />
           </div>
         </div>
 
-        <SidebarGroup className="px-2">
-          <SidebarGroupLabel className="text-sidebar-foreground/70">
-            {!isCollapsed && "Navegação"}
-          </SidebarGroupLabel>
-
+        <SidebarGroup className="px-0">
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={getNavCls}>
+                  <SidebarMenuButton asChild className="w-12 h-12 p-0 justify-center">
+                    <NavLink 
+                      to={item.url} 
+                      end 
+                      className={getNavCls}
+                      title={item.title}
+                    >
                       <item.icon className="w-5 h-5 flex-shrink-0" />
-                      {!isCollapsed && <span className="truncate">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -102,6 +91,17 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* User indicator at bottom */}
+        <div className="mt-auto p-3 flex justify-center">
+          <div className="w-8 h-8 bg-sidebar-accent rounded-full flex items-center justify-center">
+            {userRole === "admin" ? (
+              <Shield className="w-4 h-4 text-sidebar-primary" />
+            ) : (
+              <User className="w-4 h-4 text-sidebar-foreground/70" />
+            )}
+          </div>
+        </div>
       </SidebarContent>
     </Sidebar>
   );

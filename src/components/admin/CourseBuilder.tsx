@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { EditModuleModal } from './EditModuleModal';
 import { EditLessonModal } from './EditLessonModal';
+import { formatDuration } from "@/lib/formatDuration";
 
 interface CourseBuilderProps {
   open: boolean;
@@ -90,7 +91,7 @@ export function CourseBuilder({ open, onOpenChange, course }: CourseBuilderProps
                     <div>
                       <h3 className="font-semibold">{course.title}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {modules.length} módulos • {Math.round(course.duration_minutes / 60 * 10) / 10}h de duração
+                        {modules.length} módulos • {formatDuration(course.duration_minutes)} de duração
                       </p>
                     </div>
                     <Badge variant={course.is_published ? 'default' : 'secondary'}>

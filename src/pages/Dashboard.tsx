@@ -11,6 +11,7 @@ import {
   BarChart3,
   GraduationCap
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminStats } from "@/hooks/useAdminStats";
 import { useCourses } from "@/hooks/useCourses";
@@ -127,9 +128,9 @@ const Dashboard = () => {
                 </div>
               ))}
               
-              <Button variant="outline" className="w-full mt-4">
-                Ver Todos os Cursos
-              </Button>
+            <Button variant="outline" className="w-full mt-4" asChild>
+              <Link to="/admin/courses">Ver Todos os Cursos</Link>
+            </Button>
             </CardContent>
           </Card>
 
@@ -278,8 +279,8 @@ const Dashboard = () => {
               </div>
             ))}
             
-            <Button variant="outline" className="w-full mt-4">
-              Ver Todos os Cursos
+            <Button variant="outline" className="w-full mt-4" asChild>
+              <Link to="/courses">Ver Todos os Cursos</Link>
             </Button>
           </CardContent>
         </Card>

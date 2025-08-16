@@ -42,6 +42,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { BookOpen, Search, Plus, Trash2, Edit, Settings, Eye, Users, Clock, FolderOpen } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatDuration } from "@/lib/formatDuration";
 import { CreateCourseModal } from '@/components/admin/CreateCourseModal';
 import { EditCourseModal } from '@/components/admin/EditCourseModal';
 import { CourseBuilder } from '@/components/admin/CourseBuilder';
@@ -179,7 +180,7 @@ export default function CourseManagement() {
               <div>
                 <p className="text-muted-foreground text-sm font-medium">Duração Total</p>
                 <p className="text-3xl font-bold mt-2">
-                  {Math.round(courses.reduce((acc, course) => acc + course.duration_minutes, 0) / 60 * 10) / 10}h
+                  {formatDuration(courses.reduce((acc, course) => acc + course.duration_minutes, 0))}
                 </p>
               </div>
               <div className="p-3 rounded-lg bg-muted text-info">
@@ -298,7 +299,7 @@ export default function CourseManagement() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {Math.round(course.duration_minutes / 60 * 10) / 10}h
+                        {formatDuration(course.duration_minutes)}
                       </TableCell>
                       <TableCell>
                         {format(new Date(course.created_at), 'dd/MM/yyyy', { locale: ptBR })}

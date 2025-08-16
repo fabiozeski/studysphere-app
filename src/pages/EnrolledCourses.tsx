@@ -20,6 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { formatDuration } from "@/lib/formatDuration";
 
 const EnrolledCourses = () => {
   const { profile } = useAuth();
@@ -301,7 +302,7 @@ const EnrolledCourses = () => {
                     <span>{course.instructor_name}</span>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      <span>{Math.round((course.duration_minutes || 0) / 60 * 10) / 10}h</span>
+                      <span>{formatDuration(course.duration_minutes || 0)}</span>
                     </div>
                   </div>
 

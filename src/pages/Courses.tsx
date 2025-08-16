@@ -1,15 +1,24 @@
 import { useState } from "react";
-import { Search, Filter, Clock, User } from "lucide-react";
+import { Search, Filter, Clock, User, Lock, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useCourses } from "@/hooks/useCourses";
+import { useAuth } from "@/hooks/useAuth";
+import { AccessRequestModal } from "@/components/course/AccessRequestModal";
+import { formatDuration } from "@/lib/formatDuration";
 
 export default function Courses() {
   const { courses, categories, loading, selectedCategory, setSelectedCategory } = useCourses();
   const [searchTerm, setSearchTerm] = useState("");
+  const [accessRequestModal, setAccessRequestModal] = useState<{
+    isOpen: boolean;
+    courseId: string;
+    courseTitle: string;
+  }>({ isOpen: false, courseId: '', courseTitle: '' });
+  const { user } = useAuth();
 
   const filteredCourses = courses.filter(course =>
     course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -78,9 +87,12 @@ export default function Courses() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map((course) => (
-            <Link key={course.id} to={`/course/${course.id}`}>
-              <Card className="group hover:shadow-lg transition-all duration-300 hover:shadow-primary/10 border-border/50 hover:border-primary/20">
+          {filteredCourses.map((course) => {
+            const isPrivate = (course as any).course_type === 'private';
+            const canAccess = !isPrivate || user;
+            
+            const CourseCard = (
+              <Card key={course.id} className="group hover:shadow-lg transition-all duration-300 hover:shadow-primary/10 border-border/50 hover:border-primary/20">
                 <CardHeader className="p-0">
                   <div className="aspect-video bg-gradient-primary rounded-t-lg overflow-hidden">
                     {course.thumbnail_url ? (
@@ -100,15 +112,23 @@ export default function Courses() {
                 </CardHeader>
                 
                 <CardContent className="p-4">
-                  <div className="mb-2">
-                    {course.category && (
-                      <Badge variant="secondary" className="mb-2">
-                        {course.category.name}
-                      </Badge>
-                    )}
-                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                      {course.title}
-                    </h3>
+                  <div className="mb-2 flex items-start justify-between">
+                    <div className="flex-1">
+                      {course.category && (
+                        <Badge variant="secondary" className="mb-2">
+                          {course.category.name}
+                        </Badge>
+                      )}
+                      {isPrivate && (
+                        <Badge variant="outline" className="mb-2 ml-2">
+                          <Lock className="w-3 h-3 mr-1" />
+                          Privado
+                        </Badge>
+                      )}
+                      <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                        {course.title}
+                      </h3>
+                    </div>
                   </div>
                   
                   {course.description && (
@@ -117,22 +137,58 @@ export default function Courses() {
                     </p>
                   )}
                   
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
                     <div className="flex items-center gap-1">
                       <User className="w-4 h-4" />
                       <span>{course.instructor_name || 'Instrutor'}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      <span>{Math.round(course.duration_minutes / 60 * 10) / 10}h</span>
+                      <span>{formatDuration(course.duration_minutes)}</span>
                     </div>
                   </div>
+
+                  {isPrivate && (
+                    <Button 
+                      size="sm" 
+                      className="w-full"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setAccessRequestModal({
+                          isOpen: true,
+                          courseId: course.id,
+                          courseTitle: course.title
+                        });
+                      }}
+                    >
+                      <Lock className="w-4 h-4 mr-2" />
+                      Solicitar Acesso
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
-            </Link>
-          ))}
+            );
+
+            return isPrivate ? (
+              <div key={course.id}>
+                {CourseCard}
+              </div>
+            ) : (
+              <Link key={course.id} to={`/course/${course.id}`}>
+                {CourseCard}
+              </Link>
+            );
+          })}
         </div>
       )}
+
+      <AccessRequestModal
+        open={accessRequestModal.isOpen}
+        onOpenChange={(open) => setAccessRequestModal(prev => ({ ...prev, isOpen: open }))}
+        courseId={accessRequestModal.courseId}
+        courseTitle={accessRequestModal.courseTitle}
+      />
     </div>
   );
 }

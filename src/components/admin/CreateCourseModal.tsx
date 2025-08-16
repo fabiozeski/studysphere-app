@@ -10,6 +10,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { Upload, X } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface CreateCourseModalProps {
   open: boolean;
@@ -21,8 +22,7 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
     title: '',
     description: '',
     instructor_name: '',
-    duration: 0,
-    duration_unit: 'hours' as 'hours' | 'minutes',
+    duration_minutes: 0,
     category_id: '',
     is_published: false,
     course_type: 'free' as 'free' | 'private',
@@ -75,16 +75,11 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         thumbnailUrl = uploadResult.publicUrl;
       }
 
-      // Convert all to minutes for storage
-      const durationInMinutes = formData.duration_unit === 'hours' 
-        ? formData.duration * 60 
-        : formData.duration;
-
       await createCourse.mutateAsync({
         title: formData.title.trim(),
         description: formData.description.trim() || undefined,
         instructor_name: formData.instructor_name.trim() || undefined,
-        duration_minutes: durationInMinutes,
+        duration_minutes: formData.duration_minutes,
         category_id: formData.category_id || undefined,
         thumbnail_url: thumbnailUrl,
         is_published: formData.is_published,
@@ -95,8 +90,7 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         title: '',
         description: '',
         instructor_name: '',
-        duration: 0,
-        duration_unit: 'hours',
+        duration_minutes: 0,
         category_id: '',
         is_published: false,
         course_type: 'free',
@@ -113,8 +107,7 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
       title: '',
       description: '',
       instructor_name: '',
-      duration: 0,
-      duration_unit: 'hours',
+      duration_minutes: 0,
       category_id: '',
       is_published: false,
       course_type: 'free',
@@ -125,12 +118,13 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Novo Curso</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
+        <form id="create-course-form" onSubmit={handleSubmit} className="space-y-6">
           {/* Thumbnail Upload */}
           <div className="space-y-3">
             <Label>Capa do Curso</Label>
@@ -220,33 +214,19 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="duration">Duração do Curso</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="duration"
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={formData.duration}
-                  onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
-                  placeholder="0"
-                  className="flex-1"
-                />
-                <Select 
-                  value={formData.duration_unit} 
-                  onValueChange={(value: 'hours' | 'minutes') => 
-                    setFormData(prev => ({ ...prev, duration_unit: value }))
-                  }
-                >
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="hours">Horas</SelectItem>
-                    <SelectItem value="minutes">Minutos</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <Label htmlFor="duration">Duração do Curso (em minutos)</Label>
+              <Input
+                id="duration"
+                type="number"
+                min="0"
+                step="1"
+                value={formData.duration_minutes}
+                onChange={(e) => setFormData(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) || 0 }))}
+                placeholder="0"
+              />
+              <p className="text-xs text-muted-foreground">
+                Exemplo: 90 minutos = 1h 30min
+              </p>
             </div>
           </div>
 
@@ -295,19 +275,22 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={!formData.title.trim() || createCourse.isPending || uploadFile.isPending}
-              className="bg-gradient-primary hover:opacity-90"
-            >
-              {createCourse.isPending || uploadFile.isPending ? 'Criando...' : 'Criar Curso'}
-            </Button>
-          </div>
         </form>
+        </ScrollArea>
+
+        <div className="flex justify-end gap-3 pt-4 border-t">
+          <Button type="button" variant="outline" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button 
+            form="create-course-form"
+            type="submit" 
+            disabled={!formData.title.trim() || createCourse.isPending || uploadFile.isPending}
+            className="bg-gradient-primary hover:opacity-90"
+          >
+            {createCourse.isPending || uploadFile.isPending ? 'Criando...' : 'Criar Curso'}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

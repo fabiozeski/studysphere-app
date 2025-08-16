@@ -160,14 +160,14 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
           <div>
             <Label htmlFor="category">Categoria</Label>
             <Select
-              value={watch('category_id') || ''}
-              onValueChange={(value) => setValue('category_id', value)}
+              value={watch('category_id') || 'none'}
+              onValueChange={(value) => setValue('category_id', value === 'none' ? null : value)}
             >
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Nenhuma categoria</SelectItem>
+                <SelectItem value="none">Nenhuma categoria</SelectItem>
                 {categories?.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name}

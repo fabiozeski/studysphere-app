@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 const CourseView = () => {
-  const { courseId } = useParams<{ courseId: string }>();
+  const { id: courseId } = useParams<{ id: string }>();
   const videoRef = useRef<HTMLVideoElement>(null);
   const youtubeRef = useRef<HTMLIFrameElement>(null);
   const [expandedModules, setExpandedModules] = useState<string[]>([]);

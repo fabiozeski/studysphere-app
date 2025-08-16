@@ -156,6 +156,18 @@ const CourseView = () => {
     return totalLessons > 0 && completedLessons.size === totalLessons;
   };
 
+  const isAllModulesCompleted = () => {
+    if (!course) return false;
+    return course.modules.every(module => 
+      module.lessons.length > 0 && 
+      module.lessons.every(lesson => completedLessons.has(lesson.id))
+    );
+  };
+
+  const isCourseFullyCompleted = () => {
+    return isAllLessonsCompleted() && isAllModulesCompleted() && getCourseProgress() === 100;
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -433,7 +445,7 @@ const CourseView = () => {
           </Card>
 
           {/* Complete Course Button */}
-          {isAllLessonsCompleted() && getCourseProgress() === 100 && (
+          {isCourseFullyCompleted() && (
             <Card>
               <CardContent className="p-4">
                 <Button 

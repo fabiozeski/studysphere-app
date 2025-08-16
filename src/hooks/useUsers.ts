@@ -68,6 +68,107 @@ export function useUpdateUserRole() {
   });
 }
 
+export function useCreateUser() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ firstName, lastName, email, password, role }: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      role: 'admin' | 'student';
+    }) => {
+      // Create user in auth
+      const { data, error } = await supabase.auth.admin.createUser({
+        email,
+        password,
+        user_metadata: {
+          first_name: firstName,
+          last_name: lastName,
+        },
+        email_confirm: true,
+      });
+
+      if (error) throw error;
+
+      // Update user role if not student (default)
+      if (role === 'admin' && data.user) {
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .update({ role })
+          .eq('user_id', data.user.id);
+
+        if (roleError) throw roleError;
+      }
+
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      toast({
+        title: "Sucesso!",
+        description: "Usuário criado com sucesso.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro",
+        description: `Erro ao criar usuário: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+}
+
+export function useUpdateUser() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ userId, firstName, lastName, role }: {
+      userId: string;
+      firstName: string;
+      lastName: string;
+      role: 'admin' | 'student';
+    }) => {
+      // Update profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          first_name: firstName,
+          last_name: lastName,
+        })
+        .eq('user_id', userId);
+
+      if (profileError) throw profileError;
+
+      // Update role
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .update({ role })
+        .eq('user_id', userId);
+
+      if (roleError) throw roleError;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      toast({
+        title: "Sucesso!",
+        description: "Usuário atualizado com sucesso.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro",
+        description: `Erro ao atualizar usuário: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+}
+
 export function useDeleteUser() {
   const queryClient = useQueryClient();
   const { toast } = useToast();

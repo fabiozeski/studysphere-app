@@ -30,14 +30,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { useUsers, useUpdateUserRole, useDeleteUser } from '@/hooks/useUsers';
-import { Users, Search, UserPlus, Trash2, Settings, Shield, User } from 'lucide-react';
+import { useUsers, useUpdateUserRole, useDeleteUser, UserWithRole } from '@/hooks/useUsers';
+import { Users, Search, UserPlus, Trash2, Settings, Shield, User, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { CreateUserModal } from '@/components/admin/CreateUserModal';
+import { EditUserModal } from '@/components/admin/EditUserModal';
 
 export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'student'>('all');
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserWithRole | null>(null);
   
   const { data: users = [], isLoading } = useUsers();
   const updateUserRole = useUpdateUserRole();
@@ -60,6 +65,11 @@ export default function UserManagement() {
 
   const handleDeleteUser = (userId: string) => {
     deleteUser.mutate(userId);
+  };
+
+  const handleEditUser = (user: UserWithRole) => {
+    setSelectedUser(user);
+    setEditModalOpen(true);
   };
 
   const getUserInitials = (firstName: string | null, lastName: string | null) => {
@@ -86,7 +96,10 @@ export default function UserManagement() {
             Gerencie usuários, roles e permissões do sistema
           </p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
+        <Button 
+          className="bg-gradient-primary hover:opacity-90"
+          onClick={() => setCreateModalOpen(true)}
+        >
           <UserPlus className="w-4 h-4 mr-2" />
           Novo Usuário
         </Button>
@@ -214,20 +227,14 @@ export default function UserManagement() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Select
-                          value={user.role}
-                          onValueChange={(value: 'admin' | 'student') => 
-                            handleRoleChange(user.user_id, value)
-                          }
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleEditUser(user)}
+                          className="text-primary"
                         >
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="student">Estudante</SelectItem>
-                            <SelectItem value="admin">Admin</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          <Edit className="w-4 h-4" />
+                        </Button>
                         
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -263,6 +270,18 @@ export default function UserManagement() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modals */}
+      <CreateUserModal 
+        open={createModalOpen} 
+        onOpenChange={setCreateModalOpen} 
+      />
+      
+      <EditUserModal 
+        open={editModalOpen} 
+        onOpenChange={setEditModalOpen} 
+        user={selectedUser}
+      />
     </div>
   );
 }

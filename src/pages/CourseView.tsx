@@ -182,7 +182,7 @@ const CourseView = () => {
     );
   }
 
-  if (!course) {
+  if (!course && !loading) {
     return <Navigate to="/courses" replace />;
   }
 

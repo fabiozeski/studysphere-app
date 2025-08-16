@@ -102,9 +102,12 @@ export function useCourseDetails(courseId: string) {
         .select('id')
         .eq('user_id', user.id)
         .eq('course_id', courseId)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking enrollment:', error);
+        return;
+      }
       setIsEnrolled(!!data);
     } catch (error) {
       console.error('Error checking enrollment:', error);

@@ -301,7 +301,7 @@ const EnrolledCourses = () => {
                     <span>{course.instructor_name}</span>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      <span>{course.duration_hours}h</span>
+                      <span>{Math.round((course.duration_minutes || 0) / 60 * 10) / 10}h</span>
                     </div>
                   </div>
 

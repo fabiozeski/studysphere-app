@@ -14,7 +14,7 @@ export interface EnrolledCourse {
     description: string | null;
     thumbnail_url: string | null;
     instructor_name: string | null;
-    duration_hours: number | null;
+    duration_minutes: number | null;
     category_id: string | null;
     is_published: boolean;
     created_at: string;

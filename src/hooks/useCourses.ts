@@ -7,7 +7,7 @@ export interface Course {
   description: string | null;
   thumbnail_url: string | null;
   instructor_name: string | null;
-  duration_hours: number;
+  duration_minutes: number;
   is_published: boolean;
   category: {
     id: string;

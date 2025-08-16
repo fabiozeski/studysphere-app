@@ -75,16 +75,16 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         thumbnailUrl = uploadResult.publicUrl;
       }
 
-      // Convert duration to hours if needed
-      const durationInHours = formData.duration_unit === 'minutes' 
-        ? formData.duration / 60 
+      // Convert all to minutes for storage
+      const durationInMinutes = formData.duration_unit === 'hours' 
+        ? formData.duration * 60 
         : formData.duration;
 
       await createCourse.mutateAsync({
         title: formData.title.trim(),
         description: formData.description.trim() || undefined,
         instructor_name: formData.instructor_name.trim() || undefined,
-        duration_hours: durationInHours,
+        duration_minutes: durationInMinutes,
         category_id: formData.category_id || undefined,
         thumbnail_url: thumbnailUrl,
         is_published: formData.is_published,

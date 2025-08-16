@@ -179,7 +179,7 @@ export default function CourseManagement() {
               <div>
                 <p className="text-muted-foreground text-sm font-medium">Duração Total</p>
                 <p className="text-3xl font-bold mt-2">
-                  {courses.reduce((acc, course) => acc + course.duration_hours, 0)}h
+                  {Math.round(courses.reduce((acc, course) => acc + course.duration_minutes, 0) / 60 * 10) / 10}h
                 </p>
               </div>
               <div className="p-3 rounded-lg bg-muted text-info">
@@ -298,7 +298,7 @@ export default function CourseManagement() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {course.duration_hours}h
+                        {Math.round(course.duration_minutes / 60 * 10) / 10}h
                       </TableCell>
                       <TableCell>
                         {format(new Date(course.created_at), 'dd/MM/yyyy', { locale: ptBR })}

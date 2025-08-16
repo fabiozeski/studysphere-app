@@ -58,10 +58,10 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
       title: course.title,
       description: course.description || '',
       instructor_name: course.instructor_name || '',
-      duration: course.duration_hours >= 1 
-        ? course.duration_hours 
-        : Math.round(course.duration_hours * 60),
-      duration_unit: course.duration_hours >= 1 ? 'hours' : 'minutes',
+      duration: course.duration_minutes >= 60 
+        ? course.duration_minutes / 60 
+        : course.duration_minutes,
+      duration_unit: course.duration_minutes >= 60 ? 'hours' : 'minutes',
       category_id: course.category_id || '',
       is_published: course.is_published,
       course_type: (course as any).course_type || 'free',
@@ -87,9 +87,9 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
         thumbnailUrl = uploadResult.publicUrl;
       }
 
-      // Convert duration to hours if needed
-      const durationInHours = data.duration_unit === 'minutes' 
-        ? data.duration / 60 
+      // Convert all to minutes for storage
+      const durationInMinutes = data.duration_unit === 'hours' 
+        ? data.duration * 60 
         : data.duration;
 
       await updateCourse.mutateAsync({
@@ -97,7 +97,7 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
         title: data.title,
         description: data.description,
         instructor_name: data.instructor_name,
-        duration_hours: durationInHours,
+        duration_minutes: durationInMinutes,
         category_id: data.category_id || null,
         thumbnail_url: thumbnailUrl,
         is_published: data.is_published,

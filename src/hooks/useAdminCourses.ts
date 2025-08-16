@@ -9,7 +9,7 @@ export interface Course {
   description: string | null;
   thumbnail_url: string | null;
   instructor_name: string | null;
-  duration_hours: number;
+  duration_minutes: number;
   is_published: boolean;
   category_id: string | null;
   created_at: string;
@@ -49,7 +49,7 @@ interface CreateCourseData {
   title: string;
   description?: string;
   instructor_name?: string;
-  duration_hours?: number;
+  duration_minutes?: number;
   category_id?: string;
   thumbnail_url?: string;
   is_published?: boolean;
@@ -61,7 +61,7 @@ interface UpdateCourseData {
   title?: string;
   description?: string;
   instructor_name?: string;
-  duration_hours?: number;
+  duration_minutes?: number;
   category_id?: string;
   thumbnail_url?: string;
   is_published?: boolean;
@@ -117,7 +117,7 @@ export function useCreateCourse() {
           title: courseData.title,
           description: courseData.description || null,
           instructor_name: courseData.instructor_name || null,
-          duration_hours: courseData.duration_hours || 0,
+          duration_minutes: courseData.duration_minutes || 0,
           category_id: courseData.category_id || null,
           thumbnail_url: courseData.thumbnail_url || null,
           is_published: courseData.is_published || false,

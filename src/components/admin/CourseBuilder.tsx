@@ -90,7 +90,7 @@ export function CourseBuilder({ open, onOpenChange, course }: CourseBuilderProps
                     <div>
                       <h3 className="font-semibold">{course.title}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {modules.length} módulos • {course.duration_hours}h de duração
+                        {modules.length} módulos • {Math.round(course.duration_minutes / 60 * 10) / 10}h de duração
                       </p>
                     </div>
                     <Badge variant={course.is_published ? 'default' : 'secondary'}>

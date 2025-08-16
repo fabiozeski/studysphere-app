@@ -75,9 +75,9 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         thumbnailUrl = uploadResult.publicUrl;
       }
 
-      // Convert duration to hours
+      // Convert duration to hours if needed
       const durationInHours = formData.duration_unit === 'minutes' 
-        ? Math.round(formData.duration) / 60 
+        ? formData.duration / 60 
         : formData.duration;
 
       await createCourse.mutateAsync({

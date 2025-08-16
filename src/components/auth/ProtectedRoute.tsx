@@ -4,17 +4,20 @@ import { useAuth } from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  adminOnly?: boolean;
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, loading } = useAuth();
+export function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
+  const { isAuthenticated, loading, userRole } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       navigate('/auth');
+    } else if (!loading && isAuthenticated && adminOnly && userRole !== 'admin') {
+      navigate('/courses'); // Redirect non-admin users to courses
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [isAuthenticated, loading, userRole, adminOnly, navigate]);
 
   if (loading) {
     return (
@@ -28,6 +31,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!isAuthenticated) {
+    return null;
+  }
+
+  if (adminOnly && userRole !== 'admin') {
     return null;
   }
 

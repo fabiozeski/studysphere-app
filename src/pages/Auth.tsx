@@ -65,7 +65,8 @@ export default function Auth() {
         description: "Bem-vindo de volta.",
       });
       
-      navigate('/');
+      // Wait for auth state to update, then redirect based on role
+      // The redirect will be handled by the useEffect in App.tsx
     } catch (error) {
       toast({
         title: "Erro inesperado",

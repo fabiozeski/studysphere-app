@@ -15,6 +15,7 @@ import UserManagement from "./pages/UserManagement";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import CategoryManagement from "./pages/CategoryManagement";
+import CourseManagement from "./pages/CourseManagement";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,13 @@ const App = () => (
             <ProtectedRoute adminOnly>
               <MainLayout>
                 <CategoryManagement />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/courses" element={
+            <ProtectedRoute adminOnly>
+              <MainLayout>
+                <CourseManagement />
               </MainLayout>
             </ProtectedRoute>
           } />

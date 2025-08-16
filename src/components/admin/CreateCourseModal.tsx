@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCreateCourse, useUploadFile } from '@/hooks/useAdminCourses';
 import { useCategories } from '@/hooks/useCategories';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 import { Upload, X } from 'lucide-react';
 
 interface CreateCourseModalProps {
@@ -21,6 +23,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
     instructor_name: '',
     duration_hours: 0,
     category_id: '',
+    is_published: false,
+    course_type: 'free' as 'free' | 'private',
   });
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
@@ -77,6 +81,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         duration_hours: formData.duration_hours,
         category_id: formData.category_id || undefined,
         thumbnail_url: thumbnailUrl,
+        is_published: formData.is_published,
+        course_type: formData.course_type,
       });
       
       setFormData({
@@ -85,6 +91,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         instructor_name: '',
         duration_hours: 0,
         category_id: '',
+        is_published: false,
+        course_type: 'free',
       });
       removeThumbnail();
       onOpenChange(false);
@@ -100,6 +108,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
       instructor_name: '',
       duration_hours: 0,
       category_id: '',
+      is_published: false,
+      course_type: 'free',
     });
     removeThumbnail();
     onOpenChange(false);
@@ -224,6 +234,40 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
               placeholder="Descrição do curso"
               rows={4}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="course_type">Tipo do Curso</Label>
+            <Select 
+              value={formData.course_type} 
+              onValueChange={(value: 'free' | 'private') => 
+                setFormData(prev => ({ ...prev, course_type: value }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="free">Livre (Acesso direto)</SelectItem>
+                <SelectItem value="private">Privado (Requer aprovação)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="is_published">Publicar Curso</Label>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="is_published"
+                checked={formData.is_published}
+                onCheckedChange={(checked) => 
+                  setFormData(prev => ({ ...prev, is_published: checked }))
+                }
+              />
+              <span className="text-sm text-muted-foreground">
+                {formData.is_published ? 'Publicado' : 'Rascunho'}
+              </span>
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

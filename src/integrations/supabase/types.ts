@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_requests: {
+        Row: {
+          admin_response: string | null
+          course_id: string
+          created_at: string
+          id: string
+          message: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -44,6 +77,7 @@ export type Database = {
       courses: {
         Row: {
           category_id: string | null
+          course_type: string
           created_at: string
           description: string | null
           duration_hours: number | null
@@ -56,6 +90,7 @@ export type Database = {
         }
         Insert: {
           category_id?: string | null
+          course_type?: string
           created_at?: string
           description?: string | null
           duration_hours?: number | null
@@ -68,6 +103,7 @@ export type Database = {
         }
         Update: {
           category_id?: string | null
+          course_type?: string
           created_at?: string
           description?: string | null
           duration_hours?: number | null

@@ -20,6 +20,7 @@ import StudentMetrics from "./pages/StudentMetrics";
 import ProfileSettings from "./pages/ProfileSettings";
 import EnrolledCourses from "./pages/EnrolledCourses";
 import AdminMetrics from "./pages/AdminMetrics";
+import AccessRequestManagement from "./pages/AccessRequestManagement";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,13 @@ const App = () => (
             <ProtectedRoute adminOnly>
               <MainLayout>
                 <AdminMetrics />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/access-requests" element={
+            <ProtectedRoute adminOnly>
+              <MainLayout>
+                <AccessRequestManagement />
               </MainLayout>
             </ProtectedRoute>
           } />

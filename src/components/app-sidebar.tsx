@@ -40,6 +40,7 @@ const adminItems = [
   { title: "Usuários", url: "/users", icon: Users },
   { title: "Cursos", url: "/admin/courses", icon: BookOpen },
   { title: "Categorias", url: "/admin/categories", icon: FolderOpen },
+  { title: "Solicitações", url: "/admin/access-requests", icon: Shield },
   { title: "Perfil", url: "/profile", icon: User },
 ];
 

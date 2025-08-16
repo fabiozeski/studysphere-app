@@ -52,6 +52,8 @@ interface CreateCourseData {
   duration_hours?: number;
   category_id?: string;
   thumbnail_url?: string;
+  is_published?: boolean;
+  course_type?: 'free' | 'private';
 }
 
 interface UpdateCourseData {
@@ -63,6 +65,7 @@ interface UpdateCourseData {
   category_id?: string;
   thumbnail_url?: string;
   is_published?: boolean;
+  course_type?: 'free' | 'private';
 }
 
 interface CreateModuleData {
@@ -117,7 +120,8 @@ export function useCreateCourse() {
           duration_hours: courseData.duration_hours || 0,
           category_id: courseData.category_id || null,
           thumbnail_url: courseData.thumbnail_url || null,
-          is_published: false,
+          is_published: courseData.is_published || false,
+          course_type: courseData.course_type || 'free',
         })
         .select()
         .single();

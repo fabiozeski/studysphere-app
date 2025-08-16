@@ -17,7 +17,8 @@ export function useUsers() {
   return useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // First get profiles with user roles
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select(`
           *,
@@ -25,13 +26,22 @@ export function useUsers() {
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (profilesError) throw profilesError;
 
-      // Transform data to include role
-      const usersWithRole: UserWithRole[] = (data || []).map(profile => ({
-        ...profile,
-        role: (profile.user_roles as any)?.[0]?.role || 'student'
-      }));
+      // Get auth users to fetch emails
+      const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+      
+      if (authError) throw authError;
+
+      // Transform data to include role and email
+      const usersWithRole: UserWithRole[] = (profiles || []).map(profile => {
+        const authUser = authUsers?.users?.find((user: any) => user.id === profile.user_id);
+        return {
+          ...profile,
+          email: authUser?.email || '',
+          role: (profile.user_roles as any)?.[0]?.role || 'student'
+        };
+      });
 
       return usersWithRole;
     },
@@ -93,11 +103,14 @@ export function useCreateUser() {
 
       if (error) throw error;
 
-      // Update user role if not student (default)
-      if (role === 'admin' && data.user) {
+      if (!data.user) throw new Error('Failed to create user');
+
+      // The profile and user_role are created automatically by triggers
+      // But we need to update the role if it's admin (since default is student)
+      if (role === 'admin') {
         const { error: roleError } = await supabase
           .from('user_roles')
-          .update({ role })
+          .update({ role: 'admin' })
           .eq('user_id', data.user.id);
 
         if (roleError) throw roleError;

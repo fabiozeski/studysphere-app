@@ -28,7 +28,8 @@ import {
 
 const studentItems = [
   { title: "Dashboard", url: "/", icon: Home },
-  { title: "Meus Cursos", url: "/courses", icon: BookOpen },
+  { title: "Explorar Cursos", url: "/courses", icon: BookOpen },
+  { title: "Meus Cursos", url: "/my-courses", icon: GraduationCap },
   { title: "Métricas", url: "/metrics", icon: BarChart3 },
   { title: "Perfil", url: "/profile", icon: User },
 ];

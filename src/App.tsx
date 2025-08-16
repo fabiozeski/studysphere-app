@@ -18,6 +18,7 @@ import CategoryManagement from "./pages/CategoryManagement";
 import CourseManagement from "./pages/CourseManagement";
 import StudentMetrics from "./pages/StudentMetrics";
 import ProfileSettings from "./pages/ProfileSettings";
+import EnrolledCourses from "./pages/EnrolledCourses";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,13 @@ const App = () => (
             <ProtectedRoute>
               <MainLayout>
                 <CourseView />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/my-courses" element={
+            <ProtectedRoute>
+              <MainLayout>
+                <EnrolledCourses />
               </MainLayout>
             </ProtectedRoute>
           } />

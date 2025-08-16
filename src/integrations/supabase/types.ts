@@ -80,7 +80,7 @@ export type Database = {
           course_type: string
           created_at: string
           description: string | null
-          duration_hours: number | null
+          duration_minutes: number | null
           id: string
           instructor_name: string | null
           is_published: boolean | null
@@ -93,7 +93,7 @@ export type Database = {
           course_type?: string
           created_at?: string
           description?: string | null
-          duration_hours?: number | null
+          duration_minutes?: number | null
           id?: string
           instructor_name?: string | null
           is_published?: boolean | null
@@ -106,7 +106,7 @@ export type Database = {
           course_type?: string
           created_at?: string
           description?: string | null
-          duration_hours?: number | null
+          duration_minutes?: number | null
           id?: string
           instructor_name?: string | null
           is_published?: boolean | null

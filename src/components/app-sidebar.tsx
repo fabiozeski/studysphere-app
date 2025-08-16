@@ -34,8 +34,8 @@ const studentItems = [
 ];
 
 const adminItems = [
-  { title: "Dashboard", url: "/admin", icon: Home },
-  { title: "Alunos", url: "/admin/students", icon: Users },
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Usuários", url: "/users", icon: Users },
   { title: "Cursos", url: "/admin/courses", icon: BookOpen },
   { title: "Categorias", url: "/admin/categories", icon: FolderOpen },
   { title: "Configurações", url: "/admin/settings", icon: Settings },

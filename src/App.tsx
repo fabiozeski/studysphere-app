@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import CourseView from "./pages/CourseView";
+import UserManagement from "./pages/UserManagement";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -53,6 +54,13 @@ const App = () => (
             <ProtectedRoute>
               <MainLayout>
                 <Courses />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/users" element={
+            <ProtectedRoute adminOnly>
+              <MainLayout>
+                <UserManagement />
               </MainLayout>
             </ProtectedRoute>
           } />

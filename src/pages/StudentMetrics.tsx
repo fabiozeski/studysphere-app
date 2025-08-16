@@ -125,7 +125,7 @@ const StudentMetrics = () => {
                 <p className="text-muted-foreground text-sm font-medium">
                   Horas Estudadas
                 </p>
-                <p className="text-3xl font-bold mt-2">{Math.round(metrics.totalStudyTimeHours)}h</p>
+                <p className="text-3xl font-bold mt-2">{metrics.totalStudyTimeHours}h</p>
               </div>
               <div className="p-3 rounded-lg bg-warning/10 text-warning">
                 <Clock className="w-6 h-6" />
@@ -188,7 +188,7 @@ const StudentMetrics = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span>Meta Semanal</span>
-                <span>{metrics.weeklyStudiedHours}h / {metrics.weeklyGoalHours}h</span>
+                    <span>{metrics.weeklyStudiedHours}h / {metrics.weeklyGoalHours}h</span>
               </div>
               <Progress value={weeklyProgress} className="h-3" />
             </div>
@@ -230,22 +230,20 @@ const StudentMetrics = () => {
                 label: "Horas",
                 color: "hsl(var(--primary))",
               },
-            }} className="h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={metrics.monthlyProgress}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line 
-                    type="monotone" 
-                    dataKey="hours" 
-                    stroke="hsl(var(--primary))" 
-                    strokeWidth={2}
-                    dot={{ fill: "hsl(var(--primary))" }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            }} className="h-[250px] w-full">
+              <LineChart data={metrics.monthlyProgress} width={400} height={250}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line 
+                  type="monotone" 
+                  dataKey="hours" 
+                  stroke="hsl(var(--primary))" 
+                  strokeWidth={2}
+                  dot={{ fill: "hsl(var(--primary))" }}
+                />
+              </LineChart>
             </ChartContainer>
           </CardContent>
         </Card>

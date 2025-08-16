@@ -31,6 +31,8 @@ const CourseView = () => {
   const [videoDuration, setVideoDuration] = useState(0);
   const [isVideoEnded, setIsVideoEnded] = useState(false);
 
+  console.log('CourseView: courseId from params:', courseId);
+
   const {
     course,
     loading,
@@ -41,6 +43,8 @@ const CourseView = () => {
     enrollInCourse,
     markLessonComplete,
   } = useCourseDetails(courseId!);
+
+  console.log('CourseView: hook values:', { course, loading, isEnrolled });
 
   // Expand first module by default
   useEffect(() => {
@@ -148,6 +152,7 @@ const CourseView = () => {
   };
 
   if (!courseId) {
+    console.log('CourseView: No courseId, redirecting to /courses');
     return <Navigate to="/courses" replace />;
   }
 
@@ -183,6 +188,7 @@ const CourseView = () => {
   }
 
   if (!course && !loading) {
+    console.log('CourseView: No course found and not loading, redirecting to /courses');
     return <Navigate to="/courses" replace />;
   }
 

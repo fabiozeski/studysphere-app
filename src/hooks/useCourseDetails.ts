@@ -38,6 +38,7 @@ export function useCourseDetails(courseId: string) {
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    console.log('useCourseDetails: useEffect triggered with courseId:', courseId);
     if (courseId) {
       fetchCourseDetails();
       checkEnrollment();
@@ -46,12 +47,15 @@ export function useCourseDetails(courseId: string) {
   }, [courseId]);
 
   const fetchCourseDetails = async () => {
+    console.log('useCourseDetails: fetchCourseDetails called for courseId:', courseId);
     try {
       const { data: courseData, error: courseError } = await supabase
         .from('courses')
         .select('*')
         .eq('id', courseId)
         .single();
+
+      console.log('useCourseDetails: courseData:', courseData, 'error:', courseError);
 
       if (courseError) throw courseError;
 
@@ -85,17 +89,26 @@ export function useCourseDetails(courseId: string) {
       if (modules.length > 0 && modules[0].lessons.length > 0) {
         setCurrentLesson(modules[0].lessons[0]);
       }
+      
+      console.log('useCourseDetails: Course details set successfully');
     } catch (error) {
       console.error('Error fetching course details:', error);
     } finally {
+      console.log('useCourseDetails: Setting loading to false');
       setLoading(false);
     }
   };
 
   const checkEnrollment = async () => {
+    console.log('useCourseDetails: checkEnrollment called');
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        console.log('useCourseDetails: No user found');
+        return;
+      }
+
+      console.log('useCourseDetails: Checking enrollment for user:', user.id, 'course:', courseId);
 
       const { data, error } = await supabase
         .from('enrollments')
@@ -104,11 +117,14 @@ export function useCourseDetails(courseId: string) {
         .eq('course_id', courseId)
         .maybeSingle();
 
+      console.log('useCourseDetails: Enrollment data:', data, 'error:', error);
+
       if (error && error.code !== 'PGRST116') {
         console.error('Error checking enrollment:', error);
         return;
       }
       setIsEnrolled(!!data);
+      console.log('useCourseDetails: isEnrolled set to:', !!data);
     } catch (error) {
       console.error('Error checking enrollment:', error);
     }

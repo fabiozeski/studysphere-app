@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -48,12 +49,13 @@ export function CreateModuleModal({ open, onOpenChange, courseId, nextOrderIndex
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Novo Módulo</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
+        <form id="create-module-form" onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Título do Módulo *</Label>
             <Input
@@ -76,19 +78,22 @@ export function CreateModuleModal({ open, onOpenChange, courseId, nextOrderIndex
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={!formData.title.trim() || createModule.isPending}
-              className="bg-gradient-primary hover:opacity-90"
-            >
-              {createModule.isPending ? 'Criando...' : 'Criar Módulo'}
-            </Button>
-          </div>
         </form>
+        </ScrollArea>
+
+        <div className="flex justify-end gap-3 pt-4 border-t">
+          <Button type="button" variant="outline" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button 
+            form="create-module-form"
+            type="submit" 
+            disabled={!formData.title.trim() || createModule.isPending}
+            className="bg-gradient-primary hover:opacity-90"
+          >
+            {createModule.isPending ? 'Criando...' : 'Criar Módulo'}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

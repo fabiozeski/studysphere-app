@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogFooter 
 } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -57,8 +58,8 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
       title: course.title,
       description: course.description || '',
       instructor_name: course.instructor_name || '',
-      duration: course.duration_hours >= 1 ? course.duration_hours : course.duration_hours * 60,
-      duration_unit: course.duration_hours >= 1 ? 'hours' : 'minutes',
+      duration: course.duration_hours < 1 ? Math.round(course.duration_hours * 60) : course.duration_hours,
+      duration_unit: course.duration_hours < 1 ? 'minutes' : 'hours',
       category_id: course.category_id || '',
       is_published: course.is_published,
       course_type: (course as any).course_type || 'free',
@@ -118,12 +119,13 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Editar Curso</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
+        <form id="edit-course-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="title">Título *</Label>
             <Input
@@ -250,20 +252,26 @@ export function EditCourseModal({ course, open, onOpenChange }: EditCourseModalP
             <Label htmlFor="is_published">Curso publicado</Label>
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar Alterações
-            </Button>
-          </DialogFooter>
         </form>
+        </ScrollArea>
+
+        <DialogFooter className="mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancelar
+          </Button>
+          <Button 
+            form="edit-course-form" 
+            type="submit" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Salvar Alterações
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

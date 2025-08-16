@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -114,12 +115,13 @@ export function CreateLessonModal({ open, onOpenChange, moduleId, nextOrderIndex
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Nova Aula</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <ScrollArea className="max-h-[calc(90vh-8rem)] pr-4">
+        <form id="create-lesson-form" onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title">Título da Aula *</Label>
@@ -259,19 +261,22 @@ export function CreateLessonModal({ open, onOpenChange, moduleId, nextOrderIndex
             )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={handleClose}>
-              Cancelar
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={!formData.title.trim() || isUploading}
-              className="bg-gradient-primary hover:opacity-90"
-            >
-              {isUploading ? 'Criando...' : 'Criar Aula'}
-            </Button>
-          </div>
         </form>
+        </ScrollArea>
+
+        <div className="flex justify-end gap-3 pt-4 border-t">
+          <Button type="button" variant="outline" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button 
+            form="create-lesson-form"
+            type="submit" 
+            disabled={!formData.title.trim() || isUploading}
+            className="bg-gradient-primary hover:opacity-90"
+          >
+            {isUploading ? 'Criando...' : 'Criar Aula'}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

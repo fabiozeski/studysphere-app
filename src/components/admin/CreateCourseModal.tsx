@@ -21,7 +21,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
     title: '',
     description: '',
     instructor_name: '',
-    duration_hours: 0,
+    duration: 0,
+    duration_unit: 'hours' as 'hours' | 'minutes',
     category_id: '',
     is_published: false,
     course_type: 'free' as 'free' | 'private',
@@ -74,11 +75,16 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         thumbnailUrl = uploadResult.publicUrl;
       }
 
+      // Convert duration to hours if needed
+      const durationInHours = formData.duration_unit === 'minutes' 
+        ? formData.duration / 60 
+        : formData.duration;
+
       await createCourse.mutateAsync({
         title: formData.title.trim(),
         description: formData.description.trim() || undefined,
         instructor_name: formData.instructor_name.trim() || undefined,
-        duration_hours: formData.duration_hours,
+        duration_hours: durationInHours,
         category_id: formData.category_id || undefined,
         thumbnail_url: thumbnailUrl,
         is_published: formData.is_published,
@@ -89,7 +95,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
         title: '',
         description: '',
         instructor_name: '',
-        duration_hours: 0,
+        duration: 0,
+        duration_unit: 'hours',
         category_id: '',
         is_published: false,
         course_type: 'free',
@@ -106,7 +113,8 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
       title: '',
       description: '',
       instructor_name: '',
-      duration_hours: 0,
+      duration: 0,
+      duration_unit: 'hours',
       category_id: '',
       is_published: false,
       course_type: 'free',
@@ -212,16 +220,33 @@ export function CreateCourseModal({ open, onOpenChange }: CreateCourseModalProps
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="duration_hours">Duração (horas)</Label>
-              <Input
-                id="duration_hours"
-                type="number"
-                min="0"
-                step="0.5"
-                value={formData.duration_hours}
-                onChange={(e) => setFormData(prev => ({ ...prev, duration_hours: parseFloat(e.target.value) || 0 }))}
-                placeholder="0"
-              />
+              <Label htmlFor="duration">Duração do Curso</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="duration"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={formData.duration}
+                  onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
+                  placeholder="0"
+                  className="flex-1"
+                />
+                <Select 
+                  value={formData.duration_unit} 
+                  onValueChange={(value: 'hours' | 'minutes') => 
+                    setFormData(prev => ({ ...prev, duration_unit: value }))
+                  }
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hours">Horas</SelectItem>
+                    <SelectItem value="minutes">Minutos</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 

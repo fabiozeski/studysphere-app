@@ -306,23 +306,12 @@ const CourseView = () => {
                   </div>
                 )}
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Progresso do Curso</span>
                     <span>{Math.round(getCourseProgress())}%</span>
                   </div>
                   <Progress value={getCourseProgress()} className="h-2" />
-                  
-                  {isAllLessonsCompleted() && getCourseProgress() === 100 && (
-                    <Button 
-                      onClick={handleCompleteCourse}
-                      className="w-full"
-                      variant="default"
-                    >
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Concluir Curso
-                    </Button>
-                  )}
                 </div>
               </div>
             </CardContent>
@@ -442,6 +431,22 @@ const CourseView = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Complete Course Button */}
+          {isAllLessonsCompleted() && getCourseProgress() === 100 && (
+            <Card>
+              <CardContent className="p-4">
+                <Button 
+                  onClick={handleCompleteCourse}
+                  className="w-full"
+                  variant="default"
+                >
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Concluir Curso
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

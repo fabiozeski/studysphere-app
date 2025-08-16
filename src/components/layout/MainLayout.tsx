@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationCenter } from "@/components/notifications/NotificationCenter";
+import { useNavigate } from "react-router-dom";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const { signOut, profile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
@@ -29,6 +31,10 @@ export function MainLayout({ children }: MainLayoutProps) {
         variant: "destructive",
       });
     }
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   return (
@@ -56,9 +62,14 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <LogOut className="w-4 h-4" />
               </Button>
               
-              <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white text-sm font-medium">
+              <Button 
+                variant="ghost" 
+                className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white text-sm font-medium hover:bg-gradient-primary/90 transition-colors p-0"
+                onClick={handleProfileClick}
+                title="Ir para configurações do perfil"
+              >
                 {profile?.first_name?.charAt(0) || 'U'}
-              </div>
+              </Button>
             </div>
           </header>
 

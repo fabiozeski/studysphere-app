@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,12 +30,25 @@ const ProfileSettings = () => {
   const [showPassword, setShowPassword] = useState(false);
   
   const [formData, setFormData] = useState({
-    firstName: profile?.first_name || '',
-    lastName: profile?.last_name || '',
-    email: user?.email || '',
+    firstName: '',
+    lastName: '',
+    email: '',
     bio: '',
-    avatarUrl: profile?.avatar_url || '',
+    avatarUrl: '',
   });
+
+  // Update form data when profile data is loaded
+  useEffect(() => {
+    if (profile && user) {
+      setFormData({
+        firstName: profile.first_name || '',
+        lastName: profile.last_name || '',
+        email: user.email || '',
+        bio: '',
+        avatarUrl: profile.avatar_url || '',
+      });
+    }
+  }, [profile, user]);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',

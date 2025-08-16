@@ -140,7 +140,7 @@ export function NotificationSender() {
               <SelectContent>
                 {users.map((user) => (
                   <SelectItem key={user.id} value={user.user_id}>
-                    {user.first_name} {user.last_name} ({user.profiles?.email || 'Email não disponível'})
+                    {user.first_name} {user.last_name}
                   </SelectItem>
                 ))}
               </SelectContent>

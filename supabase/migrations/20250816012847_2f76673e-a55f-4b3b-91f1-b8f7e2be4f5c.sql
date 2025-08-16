@@ -1,0 +1,2 @@
+-- Create edge function for admin user creation
+-- This will be handled by the edge function creation below

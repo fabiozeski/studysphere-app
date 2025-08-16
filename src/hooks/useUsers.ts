@@ -17,33 +17,13 @@ export function useUsers() {
   return useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      // First get profiles with user roles
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select(`
-          *,
-          user_roles(role)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (profilesError) throw profilesError;
-
-      // Get auth users to fetch emails
-      const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+      // Use edge function to get users with all data
+      const { data, error } = await supabase.functions.invoke('list-users');
       
-      if (authError) throw authError;
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error || 'Failed to fetch users');
 
-      // Transform data to include role and email
-      const usersWithRole: UserWithRole[] = (profiles || []).map(profile => {
-        const authUser = authUsers?.users?.find((user: any) => user.id === profile.user_id);
-        return {
-          ...profile,
-          email: authUser?.email || '',
-          role: (profile.user_roles as any)?.[0]?.role || 'student'
-        };
-      });
-
-      return usersWithRole;
+      return data.users as UserWithRole[];
     },
   });
 }
@@ -90,31 +70,13 @@ export function useCreateUser() {
       password: string;
       role: 'admin' | 'student';
     }) => {
-      // Create user in auth
-      const { data, error } = await supabase.auth.admin.createUser({
-        email,
-        password,
-        user_metadata: {
-          first_name: firstName,
-          last_name: lastName,
-        },
-        email_confirm: true,
+      // Use edge function to create user with admin privileges
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: { firstName, lastName, email, password, role }
       });
 
       if (error) throw error;
-
-      if (!data.user) throw new Error('Failed to create user');
-
-      // The profile and user_role are created automatically by triggers
-      // But we need to update the role if it's admin (since default is student)
-      if (role === 'admin') {
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .update({ role: 'admin' })
-          .eq('user_id', data.user.id);
-
-        if (roleError) throw roleError;
-      }
+      if (!data.success) throw new Error(data.error || 'Failed to create user');
 
       return data;
     },
@@ -146,24 +108,15 @@ export function useUpdateUser() {
       lastName: string;
       role: 'admin' | 'student';
     }) => {
-      // Update profile
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({
-          first_name: firstName,
-          last_name: lastName,
-        })
-        .eq('user_id', userId);
+      // Use edge function to update user
+      const { data, error } = await supabase.functions.invoke('update-user', {
+        body: { userId, firstName, lastName, role }
+      });
 
-      if (profileError) throw profileError;
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error || 'Failed to update user');
 
-      // Update role
-      const { error: roleError } = await supabase
-        .from('user_roles')
-        .update({ role })
-        .eq('user_id', userId);
-
-      if (roleError) throw roleError;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
@@ -188,9 +141,15 @@ export function useDeleteUser() {
 
   return useMutation({
     mutationFn: async (userId: string) => {
-      // This will cascade delete the profile and user_roles due to foreign key constraints
-      const { error } = await supabase.auth.admin.deleteUser(userId);
+      // Use edge function to delete user
+      const { data, error } = await supabase.functions.invoke('delete-user', {
+        body: { userId }
+      });
+
       if (error) throw error;
+      if (!data.success) throw new Error(data.error || 'Failed to delete user');
+
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });

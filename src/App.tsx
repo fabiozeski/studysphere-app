@@ -16,6 +16,8 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import CategoryManagement from "./pages/CategoryManagement";
 import CourseManagement from "./pages/CourseManagement";
+import StudentMetrics from "./pages/StudentMetrics";
+import ProfileSettings from "./pages/ProfileSettings";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +86,20 @@ const App = () => (
             <ProtectedRoute>
               <MainLayout>
                 <CourseView />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/metrics" element={
+            <ProtectedRoute>
+              <MainLayout>
+                <StudentMetrics />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ProfileSettings />
               </MainLayout>
             </ProtectedRoute>
           } />

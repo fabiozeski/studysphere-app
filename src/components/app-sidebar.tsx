@@ -29,7 +29,7 @@ import {
 const studentItems = [
   { title: "Dashboard", url: "/", icon: Home },
   { title: "Meus Cursos", url: "/courses", icon: BookOpen },
-  { title: "Progresso", url: "/progress", icon: BarChart3 },
+  { title: "Métricas", url: "/metrics", icon: BarChart3 },
   { title: "Perfil", url: "/profile", icon: User },
 ];
 
@@ -38,8 +38,7 @@ const adminItems = [
   { title: "Usuários", url: "/users", icon: Users },
   { title: "Cursos", url: "/admin/courses", icon: BookOpen },
   { title: "Categorias", url: "/admin/categories", icon: FolderOpen },
-  { title: "Configurações", url: "/admin/settings", icon: Settings },
-  { title: "Perfil", url: "/admin/profile", icon: User },
+  { title: "Perfil", url: "/profile", icon: User },
 ];
 
 export function AppSidebar() {

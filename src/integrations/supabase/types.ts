@@ -237,6 +237,45 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          related_entity_id: string | null
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          related_entity_id?: string | null
+          title: string
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          related_entity_id?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -299,6 +338,27 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      send_notification: {
+        Args: {
+          p_category?: string
+          p_message: string
+          p_related_entity_id?: string
+          p_title: string
+          p_type?: string
+          p_user_id: string
+        }
+        Returns: string
+      }
+      send_notification_to_all: {
+        Args: {
+          p_category?: string
+          p_message: string
+          p_related_entity_id?: string
+          p_title: string
+          p_type?: string
+        }
+        Returns: number
       }
     }
     Enums: {

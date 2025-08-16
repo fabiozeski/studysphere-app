@@ -1,10 +1,11 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Bell, Search, LogOut } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -49,10 +50,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="relative hover:bg-accent/50">
-                <Bell className="w-4 h-4" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
-              </Button>
+              <NotificationCenter />
               
               <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sair">
                 <LogOut className="w-4 h-4" />

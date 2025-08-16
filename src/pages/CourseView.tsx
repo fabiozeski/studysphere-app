@@ -42,6 +42,7 @@ const CourseView = () => {
     completedLessons,
     enrollInCourse,
     markLessonComplete,
+    completeCourse,
   } = useCourseDetails(courseId!);
 
   console.log('CourseView: hook values:', { course, loading, isEnrolled });
@@ -138,6 +139,21 @@ const CourseView = () => {
     } catch (error) {
       toast.error("Erro ao se inscrever no curso");
     }
+  };
+
+  const handleCompleteCourse = async () => {
+    try {
+      await completeCourse();
+      toast.success("Curso concluído com sucesso! Parabéns!");
+    } catch (error) {
+      toast.error("Erro ao concluir o curso");
+    }
+  };
+
+  const isAllLessonsCompleted = () => {
+    if (!course) return false;
+    const totalLessons = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
+    return totalLessons > 0 && completedLessons.size === totalLessons;
   };
 
   const formatTime = (seconds: number) => {
@@ -290,12 +306,23 @@ const CourseView = () => {
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span>Progresso do Curso</span>
                     <span>{Math.round(getCourseProgress())}%</span>
                   </div>
                   <Progress value={getCourseProgress()} className="h-2" />
+                  
+                  {isAllLessonsCompleted() && getCourseProgress() === 100 && (
+                    <Button 
+                      onClick={handleCompleteCourse}
+                      className="w-full"
+                      variant="default"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Concluir Curso
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>

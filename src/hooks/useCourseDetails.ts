@@ -186,6 +186,26 @@ export function useCourseDetails(courseId: string) {
     }
   };
 
+  const completeCourse = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('User not authenticated');
+
+      const { error } = await supabase
+        .from('enrollments')
+        .update({
+          completed_at: new Date().toISOString(),
+        })
+        .eq('user_id', user.id)
+        .eq('course_id', courseId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error completing course:', error);
+      throw error;
+    }
+  };
+
   return {
     course,
     loading,
@@ -195,5 +215,6 @@ export function useCourseDetails(courseId: string) {
     completedLessons,
     enrollInCourse,
     markLessonComplete,
+    completeCourse,
   };
 }

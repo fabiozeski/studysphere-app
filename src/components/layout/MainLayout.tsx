@@ -1,14 +1,35 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 interface MainLayoutProps {
   children: React.ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
+  const { signOut, profile } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Logout realizado",
+        description: "Você foi desconectado com sucesso.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro no logout",
+        description: "Ocorreu um erro ao fazer logout.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -33,7 +54,13 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
               </Button>
               
-              <div className="w-8 h-8 bg-gradient-primary rounded-full"></div>
+              <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sair">
+                <LogOut className="w-4 h-4" />
+              </Button>
+              
+              <div className="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white text-sm font-medium">
+                {profile?.first_name?.charAt(0) || 'U'}
+              </div>
             </div>
           </header>
 

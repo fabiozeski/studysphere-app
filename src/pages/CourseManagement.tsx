@@ -43,6 +43,7 @@ import { BookOpen, Search, Plus, Trash2, Edit, Settings, Eye, Users, Clock, Fold
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CreateCourseModal } from '@/components/admin/CreateCourseModal';
+import { EditCourseModal } from '@/components/admin/EditCourseModal';
 import { CourseBuilder } from '@/components/admin/CourseBuilder';
 
 export default function CourseManagement() {
@@ -50,8 +51,10 @@ export default function CourseManagement() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [builderOpen, setBuilderOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   
   const { data: courses = [], isLoading } = useAdminCourses();
   const { data: categories = [] } = useCategories();
@@ -86,6 +89,11 @@ export default function CourseManagement() {
   const openCourseBuilder = (course: Course) => {
     setSelectedCourse(course);
     setBuilderOpen(true);
+  };
+
+  const openEditCourse = (course: Course) => {
+    setEditingCourse(course);
+    setEditModalOpen(true);
   };
 
   if (isLoading) {
@@ -295,8 +303,18 @@ export default function CourseManagement() {
                       <TableCell>
                         {format(new Date(course.created_at), 'dd/MM/yyyy', { locale: ptBR })}
                       </TableCell>
-                      <TableCell className="text-right">
+                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => openEditCourse(course)}
+                            className="text-primary"
+                            title="Editar curso"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          
                           <Button
                             variant="outline"
                             size="icon"
@@ -358,6 +376,14 @@ export default function CourseManagement() {
         open={createModalOpen} 
         onOpenChange={setCreateModalOpen} 
       />
+
+      {editingCourse && (
+        <EditCourseModal
+          course={editingCourse}
+          open={editModalOpen}
+          onOpenChange={setEditModalOpen}
+        />
+      )}
       
       {selectedCourse && (
         <CourseBuilder 

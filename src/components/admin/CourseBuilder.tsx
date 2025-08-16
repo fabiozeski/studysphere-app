@@ -18,8 +18,11 @@ import {
   Clock,
   Settings,
   Youtube,
-  Upload
+  Upload,
+  Edit
 } from 'lucide-react';
+import { EditModuleModal } from './EditModuleModal';
+import { EditLessonModal } from './EditLessonModal';
 
 interface CourseBuilderProps {
   open: boolean;
@@ -32,6 +35,10 @@ export function CourseBuilder({ open, onOpenChange, course }: CourseBuilderProps
   const [createLessonOpen, setCreateLessonOpen] = useState(false);
   const [selectedModuleId, setSelectedModuleId] = useState<string>('');
   const [expandedModules, setExpandedModules] = useState<string[]>([]);
+  const [editModuleOpen, setEditModuleOpen] = useState(false);
+  const [editLessonOpen, setEditLessonOpen] = useState(false);
+  const [selectedModule, setSelectedModule] = useState<any>(null);
+  const [selectedLesson, setSelectedLesson] = useState<any>(null);
 
   const { data: modules = [] } = useCourseModules(course.id);
 
@@ -46,6 +53,16 @@ export function CourseBuilder({ open, onOpenChange, course }: CourseBuilderProps
   const openCreateLesson = (moduleId: string) => {
     setSelectedModuleId(moduleId);
     setCreateLessonOpen(true);
+  };
+
+  const openEditModule = (module: any) => {
+    setSelectedModule(module);
+    setEditModuleOpen(true);
+  };
+
+  const openEditLesson = (lesson: any) => {
+    setSelectedLesson(lesson);
+    setEditLessonOpen(true);
   };
 
   return (
@@ -123,6 +140,8 @@ export function CourseBuilder({ open, onOpenChange, course }: CourseBuilderProps
                         isExpanded={expandedModules.includes(module.id)}
                         onToggleExpansion={() => toggleModuleExpansion(module.id)}
                         onCreateLesson={() => openCreateLesson(module.id)}
+                        onEditModule={() => openEditModule(module)}
+                        onEditLesson={openEditLesson}
                       />
                     ))}
                   </div>
@@ -160,6 +179,22 @@ export function CourseBuilder({ open, onOpenChange, course }: CourseBuilderProps
         moduleId={selectedModuleId}
         nextOrderIndex={0} // Will be calculated based on existing lessons
       />
+
+      {selectedModule && (
+        <EditModuleModal
+          module={selectedModule}
+          open={editModuleOpen}
+          onOpenChange={setEditModuleOpen}
+        />
+      )}
+
+      {selectedLesson && (
+        <EditLessonModal
+          lesson={selectedLesson}
+          open={editLessonOpen}
+          onOpenChange={setEditLessonOpen}
+        />
+      )}
     </>
   );
 }
@@ -170,9 +205,11 @@ interface ModuleCardProps {
   isExpanded: boolean;
   onToggleExpansion: () => void;
   onCreateLesson: () => void;
+  onEditModule: () => void;
+  onEditLesson: (lesson: any) => void;
 }
 
-function ModuleCard({ module, index, isExpanded, onToggleExpansion, onCreateLesson }: ModuleCardProps) {
+function ModuleCard({ module, index, isExpanded, onToggleExpansion, onCreateLesson, onEditModule, onEditLesson }: ModuleCardProps) {
   const { data: lessons = [] } = useModuleLessons(module.id);
 
   return (
@@ -196,17 +233,29 @@ function ModuleCard({ module, index, isExpanded, onToggleExpansion, onCreateLess
                   </p>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCreateLesson();
-                }}
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                Aula
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditModule();
+                  }}
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCreateLesson();
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Aula
+                </Button>
+              </div>
             </div>
           </CardHeader>
         </CollapsibleTrigger>
@@ -258,6 +307,14 @@ function ModuleCard({ module, index, isExpanded, onToggleExpansion, onCreateLess
                           {lesson.materials.length} arquivo{lesson.materials.length > 1 ? 's' : ''}
                         </Badge>
                       )}
+                      
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onEditLesson(lesson)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
                 ))}

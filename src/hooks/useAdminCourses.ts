@@ -306,6 +306,72 @@ export function useCreateLesson() {
   });
 }
 
+export function useUpdateModule() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ id, ...updateData }: { id: string } & Partial<Module>) => {
+      const { data, error } = await supabase
+        .from('modules')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['course-modules', data.course_id] });
+      toast({
+        title: 'Módulo atualizado',
+        description: 'O módulo foi atualizado com sucesso.',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Erro ao atualizar módulo',
+        description: error.message || 'Ocorreu um erro inesperado.',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useUpdateLesson() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ id, ...updateData }: { id: string } & Partial<Lesson>) => {
+      const { data, error } = await supabase
+        .from('lessons')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['module-lessons', data.module_id] });
+      toast({
+        title: 'Aula atualizada',
+        description: 'A aula foi atualizada com sucesso.',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Erro ao atualizar aula',
+        description: error.message || 'Ocorreu um erro inesperado.',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
 // File upload hooks
 export function useUploadFile() {
   const { toast } = useToast();
